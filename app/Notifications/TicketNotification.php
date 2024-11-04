@@ -29,12 +29,12 @@ class TicketNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
-        $subject = "إشعار حول تذكرتك: {$this->ticket->title}";
+        $subject = "Notification about a ticket: {$this->ticket->title}";
         
         return (new MailMessage)
             ->subject($subject)
-            ->line("تذكرتك بعنوان '{$this->ticket->title}' قد تم {$this->action}.")
-            ->action('عرض التذكرة', url("/tickets/{$this->ticket->id}"))
-            ->line('شكراً لك!');
+            ->line("ticket address '{$this->ticket->title}' Done{$this->action}.")
+            ->action('Display Ticket', url("/tickets/{$this->ticket->id}"))
+            ->line('thank you');
     }
 }
