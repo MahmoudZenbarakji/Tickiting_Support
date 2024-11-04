@@ -8,7 +8,7 @@ use App\Notifications\TicketNotification;
 
 class TicketController extends Controller
 {
-    // عرض جميع التذاكر
+    
     public function index()
     {
         $tickets = Ticket::with('responses')->get();
@@ -18,7 +18,7 @@ class TicketController extends Controller
         ], 200);
     }
 
-    // إنشاء تذكرة جديدة
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -32,30 +32,30 @@ class TicketController extends Controller
             'description' => $request->description,
             'priority' => $request->priority,
             'user_id' => auth()->id(),
-            'status' => 'open', // تعيين الحالة الافتراضية كـ "مفتوحة"
+            'status' => 'open', 
         ]);
 
-        // إرسال إشعار عند فتح تذكرة جديدة
-        $ticket->user->notify(new TicketNotification($ticket, 'فتح تذكرة جديدة'));
+        
+        $ticket->user->notify(new TicketNotification($ticket, 'open a new ticket'));
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إنشاء التذكرة بنجاح.',
+            'message' => 'ticket created successfully',
             'data' => $ticket,
         ], 201);
     }
 
-    // عرض تذكرة محددة
+    
     public function show(Ticket $ticket)
     {
-        $ticket->load('responses'); // جلب الردود المرتبطة بالتذكرة
+        $ticket->load('responses'); 
         return response()->json([
             'success' => true,
             'data' => $ticket,
         ], 200);
     }
 
-    // تحديث تذكرة معينة
+    
     public function update(Request $request, Ticket $ticket)
     {
         $request->validate([
@@ -69,12 +69,12 @@ class TicketController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث التذكرة بنجاح.',
+            'message' => 'ticket updated successfully',
             'data' => $ticket,
         ], 200);
     }
 
-    // حذف تذكرة معينة
+    
     public function destroy(Ticket $ticket)
     {
         $ticket->delete();
@@ -90,31 +90,28 @@ class TicketController extends Controller
     {
         $ticket->update(['status' => 'closed']);
         event(new TicketStatusUpdated($ticket));
-
-        // إرسال إشعار عند إغلاق التذكرة
+ 
         $ticket->user->notify(new TicketNotification($ticket, 'إغلاق التذكرة'));
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إغلاق التذكرة بنجاح.',
+            'message' => 'ticket closed',
         ], 200);
     }
 
-    // إعادة فتح التذكرة
+    
     public function reopen(Ticket $ticket)
     {
         $ticket->update(['status' => 'open']);
-
-        // إرسال إشعار عند إعادة فتح التذكرة
-        $ticket->user->notify(new TicketNotification($ticket, 'إعادة فتح التذكرة'));
+        $ticket->user->notify(new TicketNotification($ticket, 'reopen'));
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إعادة فتح التذكرة بنجاح.',
+            'message' => 'ticket reopen.',
         ], 200);
     }
 
-    // إضافة رد على تذكرة
+    
     public function respond(Request $request, Ticket $ticket)
     {
         $request->validate([
@@ -125,13 +122,12 @@ class TicketController extends Controller
             'user_id' => auth()->id(),
             'response_text' => $request->response_text,
         ]);
-
-        // إرسال إشعار عند تلقي رد على التذكرة
-        $ticket->user->notify(new TicketNotification($ticket, 'تلقي رد على التذكرة'));
+ 
+        $ticket->user->notify(new TicketNotification($ticket, 'Recieved answerd'));
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إضافة الرد بنجاح.',
+            'message' => 'answer added successfully',
         ], 200);
     }
 }

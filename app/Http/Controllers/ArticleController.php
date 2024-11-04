@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
-    // عرض جميع المقالات
     public function index()
     {
         $articles = Article::all();
@@ -17,7 +16,7 @@ class ArticleController extends Controller
         ], 200);
     }
 
-    // إنشاء مقال جديد
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -31,12 +30,11 @@ class ArticleController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إنشاء المقال بنجاح.',
+            'message' => 'Article created successfully',
             'data' => $article,
         ], 201);
     }
-
-    // عرض مقال معين
+ 
     public function show(Article $article)
     {
         return response()->json([
@@ -45,7 +43,7 @@ class ArticleController extends Controller
         ], 200);
     }
 
-    // تحديث مقال
+    
     public function update(Request $request, Article $article)
     {
         $request->validate([
@@ -59,19 +57,19 @@ class ArticleController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث المقال بنجاح.',
+            'message' => 'Article updated successfully',
             'data' => $article,
         ], 200);
     }
 
-    // حذف مقال
+    
     public function destroy(Article $article)
     {
         $article->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'تم حذف المقال بنجاح.',
+            'message' => 'Article deleted successfully',
         ], 200);
     }
 }

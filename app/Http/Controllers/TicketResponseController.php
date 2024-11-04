@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class TicketResponseController extends Controller
 {
-    // عرض جميع الردود لتذكرة معينة
     public function index(Ticket $ticket)
     {
         $responses = $ticket->responses()->get();
@@ -18,7 +17,7 @@ class TicketResponseController extends Controller
         ], 200);
     }
 
-    // إضافة رد إلى تذكرة
+    
     public function store(Request $request, Ticket $ticket)
     {
         $request->validate([
@@ -31,19 +30,18 @@ class TicketResponseController extends Controller
             'response_text' => $request->response_text,
         ]);
 
-        // تحديث حالة التذكرة بناءً على الردود
+        
         if (auth()->user()->role === 'Support Agent') {
             $ticket->update(['status' => 'in_progress']);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إضافة الرد بنجاح.',
+            'message' => 'Active response added.',
             'data' => $response,
         ], 201);
     }
 
-    // عرض رد معين بناءً على معرفه
     public function show(Ticket $ticket, TicketResponse $response)
     {
         return response()->json([
@@ -52,7 +50,7 @@ class TicketResponseController extends Controller
         ], 200);
     }
 
-    // تحديث رد معين
+    
     public function update(Request $request, Ticket $ticket, TicketResponse $response)
     {
         $request->validate([
@@ -65,19 +63,18 @@ class TicketResponseController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث الرد بنجاح.',
+            'message' => 'answerd added successfully',
             'data' => $response,
         ], 200);
     }
 
-    // حذف رد معين
     public function destroy(Ticket $ticket, TicketResponse $response)
     {
         $response->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'تم حذف الرد بنجاح.',
+            'message' => 'answer was deleted successfully',
         ], 200);
     }
 }

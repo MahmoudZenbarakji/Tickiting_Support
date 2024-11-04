@@ -10,7 +10,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Spatie\Permission\Models\Role;
 class AuthController extends Controller
 {
-    // تسجيل مستخدم جديد
+    
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -24,7 +24,7 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        // إنشاء المستخدم بالدور الافتراضي (عميل)
+        
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -32,7 +32,7 @@ class AuthController extends Controller
             'role' => 'Customer',
         ]);
         $user->assignRole('Customer');
-        // توليد توكن JWT
+        
         $token = JWTAuth::fromUser($user);
 
         return response()->json([
@@ -41,13 +41,13 @@ class AuthController extends Controller
         ], 201);
     }
 
-    // تسجيل الدخول
+    
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
         if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'بيانات تسجيل الدخول غير صحيحة'], 401);
+            return response()->json(['error' => 'login data wrong'], 401);
         }
 
         return response()->json([
@@ -55,12 +55,12 @@ class AuthController extends Controller
             'user' => auth()->user()
         ]);
     }
-    
 
-    // تسجيل الخروج
+
+    
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());
-        return response()->json(['message' => 'تم تسجيل الخروج بنجاح']);
+        return response()->json(['message' => 'logout successfully']);
     }
 }

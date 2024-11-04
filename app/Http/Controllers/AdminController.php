@@ -7,7 +7,7 @@ use App\Models\User;
 
 class AdminController extends Controller
 {
-    // عرض بيانات لوحة التحكم كـ JSON
+    
     public function dashboard()
     {
         $openTickets = Ticket::where('status', 'open')->count();
@@ -24,7 +24,7 @@ class AdminController extends Controller
         ], 200);
     }
 
-    // عرض إحصائيات التذاكر كـ JSON
+    
     public function statistics()
     {
         $openTickets = Ticket::where('status', 'open')->count();
