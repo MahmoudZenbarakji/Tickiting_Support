@@ -18,7 +18,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
-        $user->assignRole('Customer');
+        
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -31,7 +31,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'role' => 'Customer',
         ]);
-
+        $user->assignRole('Customer');
         // توليد توكن JWT
         $token = JWTAuth::fromUser($user);
 
@@ -55,6 +55,7 @@ class AuthController extends Controller
             'user' => auth()->user()
         ]);
     }
+    
 
     // تسجيل الخروج
     public function logout()
