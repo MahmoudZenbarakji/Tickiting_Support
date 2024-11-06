@@ -9,23 +9,22 @@ use Spatie\Permission\Models\Permission;
 class RolePermissionSeeder extends Seeder
 {
     public function run()
-    {
-        // إنشاء الأدوار
-        $admin = Role::create(['name' => 'Admin']);
-        $supportAgent = Role::create(['name' => 'Support Agent']);
-        $customer = Role::create(['name' => 'Customer']);
+{
+    // Create permissions
+    $createTicket = Permission::create(['name' => 'create-ticket']);
+    $viewTicket = Permission::create(['name' => 'view-ticket']);
+    $updateTicket = Permission::create(['name' => 'update-ticket']);
+    $manageUsers = Permission::create(['name' => 'manage-users']);
+    $closeTicket = Permission::create(['name' => 'close-ticket']);
 
-        // إنشاء الصلاحيات
-        Permission::create(['name' => 'create tickets']);
-        Permission::create(['name' => 'view all tickets']);
-        Permission::create(['name' => 'reply to tickets']);
-        Permission::create(['name' => 'close tickets']);
-        Permission::create(['name' => 'manage users']);
-        Permission::create(['name' => 'view statistics']);
+    // Assign permissions to roles
+    $adminRole = Role::findByName('Admin');
+    $adminRole->givePermissionTo(['create-ticket', 'view-ticket', 'update-ticket', 'manage-users', 'close-ticket']);
 
-        // تعيين الصلاحيات للأدوار
-        $customer->givePermissionTo(['create tickets', 'reply to tickets']);
-        $supportAgent->givePermissionTo(['view all tickets', 'reply to tickets', 'close tickets']);
-        $admin->givePermissionTo(Permission::all());
-    }
+    $supportAgentRole = Role::findByName('Support Agent');
+    $supportAgentRole->givePermissionTo(['view-ticket', 'update-ticket', 'close-ticket']);
+
+    $customerRole = Role::findByName('Customer');
+    $customerRole->givePermissionTo(['create-ticket', 'view-ticket']);
+}
 }

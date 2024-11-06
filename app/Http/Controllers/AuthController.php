@@ -34,7 +34,13 @@ class AuthController extends Controller
         $user->assignRole('Customer');
         
         $token = JWTAuth::fromUser($user);
-
+        if ($user->email == 'admin@example.com') {
+            $user->assignRole('Admin');
+        } elseif ($user->email == 'support@example.com') {
+            $user->assignRole('Support Agent');
+        } else {
+            $user->assignRole('Customer');
+        }
         return response()->json([
             'user' => $user,
             'token' => $token,
@@ -53,7 +59,7 @@ class AuthController extends Controller
         return response()->json([
             'token' => $token,
             'user' => auth()->user()
-        ]);
+        ],201);
     }
 
 

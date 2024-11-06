@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Notifications\TicketNotification;
-
+use Illuminate\Support\Facades\Auth;
 class TicketController extends Controller
 {
     
@@ -18,13 +18,37 @@ class TicketController extends Controller
         ], 200);
     }
 
-    
+
     public function store(Request $request)
+    {
+        // Validate the input
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'priority' => 'required|string|in:low,medium,high',
+        ]);
+    
+        // Create a new ticket
+        $ticket = new Ticket();
+        $ticket->title = $validated['title'];
+        $ticket->description = $validated['description'];
+        $ticket->priority = $validated['priority'];
+        $ticket->status = 'open';
+        $ticket->user_id = Auth::id(); // Automatically assign user_id from authenticated user
+        $ticket->save();
+    
+        // Return a 201 response with the created ticket
+        return response()->json($ticket, 201); // HTTP status code 201 Created
+    }
+
+    
+    /*public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|in:high,medium,low',
+            'status' => 'required|string',
         ]);
 
         $ticket = Ticket::create([
@@ -43,7 +67,7 @@ class TicketController extends Controller
             'message' => 'ticket created successfully',
             'data' => $ticket,
         ], 201);
-    }
+    }*/
 
     
     public function show(Ticket $ticket)
